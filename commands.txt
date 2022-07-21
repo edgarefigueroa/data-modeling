@@ -1,0 +1,129 @@
+CREATE TABLE "dp_user_info" (
+	"dp_user_id" serial NOT NULL,
+	"firstname" varchar(255) NOT NULL,
+	"lastname" varchar(255) NOT NULL,
+	"dob" varchar(255) NOT NULL,
+	CONSTRAINT "dp_user_info_pk" PRIMARY KEY ("dp_user_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "dp_auth" (
+	"dp_auth_id" serial NOT NULL,
+	"email" varchar(255) NOT NULL,
+	"password_hash" varchar(1000) NOT NULL,
+	"dp_user_id" integer NOT NULL,
+	CONSTRAINT "dp_auth_pk" PRIMARY KEY ("dp_auth_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "create_recipe_table" (
+	"dp_recipe_id" serial NOT NULL,
+	"recipe_name" varchar(500) NOT NULL,
+	"isPublic" BOOLEAN NOT NULL,
+  "dp_intructions_id" integer NOT NULL,
+	"dp_user_id" integer NOT NULL,
+  CONSTRAINT "create_recipe_table_pk" PRIMARY KEY ("dp_recipe_id")
+) WITH(
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "instructions_table" (
+	"dp_instructions_id" serial NOT NULL,
+	"instructions" VARCHAR(2000) NOT NULL,
+	CONSTRAINT "instructions_table_pk" PRIMARY KEY ("dp_instructions_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "ingredients_table" (
+	"dp_ingredients_id" serial NOT NULL,
+	"ingridient_name" varchar(500) NOT NULL,
+	CONSTRAINT "ingredients_table_pk" PRIMARY KEY ("dp_ingredients_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "grocery_list_table" (
+	"dp_grocery_id" serial NOT NULL,
+	"grocery_name" varchar(255) NOT NULL,
+	"dp_user_id" integer NOT NULL,
+	CONSTRAINT "grocery_list_table_pk" PRIMARY KEY ("dp_grocery_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "Occassions_table" (
+	"dp_occassion_id" serial NOT NULL,
+	"ocassion" varchar(255) NOT NULL,
+	"dp_user_id" integer NOT NULL,
+	"dp_recipe_id" integer NOT NULL,
+	CONSTRAINT "Occassions_table_pk" PRIMARY KEY ("dp_occassion_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "recipe_ingredients_table" (
+	"dp_recipe_ingredients_id" serial NOT NULL,
+	"dp_recipe_id" integer NOT NULL,
+	"dp_ingredients_id" integer NOT NULL,
+	CONSTRAINT "recipe_ingredients_table_pk" PRIMARY KEY ("dp_recipe_ingredients_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "ingredients_grocery_table" (
+	"dp_ingredients_grocery_id" serial NOT NULL,
+	"dp_grocery_id" integer NOT NULL,
+	"dp_ingredients_id" integer NOT NULL,
+	CONSTRAINT "ingredients_grocery_table_pk" PRIMARY KEY ("dp_ingredients_grocery_id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+
+ALTER TABLE "dp_auth" ADD CONSTRAINT "dp_auth_fk0" FOREIGN KEY ("dp_user_id") REFERENCES "dp_user_info"("dp_user_id");
+
+ALTER TABLE "create_recipe_table" ADD CONSTRAINT "create_recipe_table_fk0" FOREIGN KEY ("dp_user_id") REFERENCES "dp_user_info"("dp_user_id");
+ALTER TABLE "create_recipe_table" ADD CONSTRAINT "create_recipe_table_fk1" FOREIGN KEY ("dp_intructions_id") REFERENCES "instructions_table"("dp_instructions_id");
+
+
+
+ALTER TABLE "grocery_list_table" ADD CONSTRAINT "grocery_list_table_fk0" FOREIGN KEY ("dp_user_id") REFERENCES "dp_user_info"("dp_user_id");
+
+ALTER TABLE "Occassions_table" ADD CONSTRAINT "Occassions_table_fk0" FOREIGN KEY ("dp_user_id") REFERENCES "dp_user_info"("dp_user_id");
+ALTER TABLE "Occassions_table" ADD CONSTRAINT "Occassions_table_fk1" FOREIGN KEY ("dp_recipe_id") REFERENCES "create_recipe_table"("dp_recipe_id");
+
+ALTER TABLE "recipe_ingredients_table" ADD CONSTRAINT "recipe_ingredients_table_fk0" FOREIGN KEY ("dp_recipe_id") REFERENCES "create_recipe_table"("dp_recipe_id");
+ALTER TABLE "recipe_ingredients_table" ADD CONSTRAINT "recipe_ingredients_table_fk1" FOREIGN KEY ("dp_ingredients_id") REFERENCES "ingredients_table"("dp_ingredients_id");
+
+ALTER TABLE "ingredients_grocery_table" ADD CONSTRAINT "ingredients_grocery_table_fk0" FOREIGN KEY ("dp_grocery_id") REFERENCES "grocery_list_table"("dp_grocery_id");
+ALTER TABLE "ingredients_grocery_table" ADD CONSTRAINT "ingredients_grocery_table_fk1" FOREIGN KEY ("dp_ingredients_id") REFERENCES "ingredients_table"("dp_ingredients_id");
+
+
+
+
+
+
+
+
+
